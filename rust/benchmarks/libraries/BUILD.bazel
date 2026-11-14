@@ -1,0 +1,37 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+_BENCH = "//rust/benchmarks/common:bench"
+
+rust_binary(
+    name = "bench_array_queue",
+    srcs = ["bench_array_queue.rs"],
+    crate_root = "bench_array_queue.rs",
+    edition = "2021",
+    deps = [_BENCH, "@crates//:crossbeam-queue"]
+)
+
+rust_binary(
+    name = "bench_scc_queue",
+    srcs = ["bench_scc_queue.rs"],
+    crate_root = "bench_scc_queue.rs",
+    edition = "2021",
+    deps = [_BENCH, "@crates//:scc"]
+)
+
+rust_binary(
+    name = "bench_scc_stack",
+    srcs = ["bench_scc_stack.rs"],
+    crate_root = "bench_scc_stack.rs",
+    edition = "2021",
+    deps = [_BENCH, "@crates//:scc"]
+)
+
+rust_binary(
+    name = "bench_skiplist",
+    srcs = ["bench_skiplist.rs"],
+    crate_root = "bench_skiplist.rs",
+    edition = "2021",
+    deps = [_BENCH, "@crates//:crossbeam-skiplist"]
+)

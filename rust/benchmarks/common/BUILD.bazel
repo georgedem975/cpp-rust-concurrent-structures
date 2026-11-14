@@ -1,0 +1,31 @@
+load("@rules_rust//rust:defs.bzl", "rust_library", "rust_test")
+
+package(default_visibility = ["//visibility:public"])
+
+rust_library(
+    name = "bench",
+    srcs = [
+        "bench.rs",
+        "config.rs",
+        "csv_reporter.rs",
+        "metrics.rs",
+        "runner.rs",
+        "system.rs"
+    ],
+    crate_root = "bench.rs",
+    edition = "2021"
+)
+
+rust_test(
+    name = "bench_tests",
+    srcs = [
+        "bench.rs",
+        "config.rs",
+        "csv_reporter.rs",
+        "metrics.rs",
+        "runner.rs",
+        "system.rs"
+    ],
+    crate_root = "bench.rs",
+    edition = "2021"
+)

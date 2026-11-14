@@ -1,0 +1,20 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "cds",
+    srcs = glob(
+        ["src/**/*.cpp"],
+        exclude = [
+            "src/dllmain.cpp",
+            "src/topology_hpux.cpp",
+            "src/topology_linux.cpp",
+            "src/topology_osx.cpp"
+        ]
+    ),
+    hdrs = glob([ "cds/**/*.h" ]),
+    copts = ["/std:c++latest"],
+    defines = ["CDS_BUILD_STATIC_LIB"],
+    includes = ["."]
+)

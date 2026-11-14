@@ -1,0 +1,33 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "bench",
+    srcs = [
+        "config.cpp",
+        "csvReporter.cpp",
+        "latency.cpp",
+        "metrics.cpp",
+        "runner.cpp",
+    ],
+    hdrs = [
+        "clock.h",
+        "config.h",
+        "csvReporter.h",
+        "latency.h",
+        "metrics.h",
+        "point.h",
+        "result.h",
+        "run.h",
+        "runner.h",
+        "synchronization.h",
+        "worker.h",
+    ],
+    includes = ["."],
+    deps = [
+        "@cli11//:cli11",
+        "@fmt//:fmt",
+        "@quill//:quill",
+    ],
+)

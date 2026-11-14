@@ -1,0 +1,43 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+_BENCH = "//cpp/benchmarks/common:bench"
+_CDS = "@libcds//:cds"
+_BOOST_LOCKFREE = "@boost.lockfree//:boost.lockfree"
+
+cc_binary(
+    name = "bench_boost_bounded_queue",
+    srcs = ["bench_boost_bounded_queue.cpp"],
+    deps = [_BOOST_LOCKFREE, _BENCH]
+)
+
+cc_binary(
+    name = "bench_boost_queue",
+    srcs = ["bench_boost_queue.cpp"],
+    deps = [_BOOST_LOCKFREE, _BENCH]
+)
+
+cc_binary(
+    name = "bench_boost_stack",
+    srcs = ["bench_boost_stack.cpp"],
+    deps = [_BOOST_LOCKFREE, _BENCH]
+)
+
+cc_binary(
+    name = "bench_cds_msqueue",
+    srcs = ["bench_cds_msqueue.cpp", "cds_setup.h"],
+    deps = [_CDS, _BENCH]
+)
+
+cc_binary(
+    name = "bench_cds_stack",
+    srcs = ["bench_cds_stack.cpp", "cds_setup.h"],
+    deps = [_CDS, _BENCH]
+)
+
+cc_binary(
+    name = "bench_cds_skiplist",
+    srcs = ["bench_cds_skiplist.cpp", "cds_setup.h"],
+    deps = [_CDS, _BENCH]
+)

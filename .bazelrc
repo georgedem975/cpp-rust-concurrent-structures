@@ -1,0 +1,13 @@
+build --enable_platform_specific_config
+
+build:windows --features=-default_cpp_std
+
+build:windows --cxxopt=/std:c++latest
+
+build:windows --cxxopt=/utf-8
+
+build:release --compilation_mode=opt
+
+test --test_output=errors
+
+build --verbose_failures

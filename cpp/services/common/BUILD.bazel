@@ -1,0 +1,24 @@
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "common",
+    srcs = [
+        "reporter.cpp",
+        "statistics.cpp"
+    ],
+    hdrs = [
+        "clock.h",
+        "format.h",
+        "protocol.h",
+        "reporter.h",
+        "statistics.h",
+        "tcp_server.h"
+    ],
+    deps = [
+        "@boost.asio//:boost.asio",
+        "@fmt//:fmt",
+        "@ftxui//:component"
+    ],
+)

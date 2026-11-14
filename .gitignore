@@ -1,0 +1,15 @@
+# Bazel convenience symlinks and output trees
+bazel-*
+
+# Python bytecode caches
+__pycache__/
+
+# IDEA project files
+.idea
+
+# Benchmark results
+results/
+
+# Local working directories
+research/
+presentation/

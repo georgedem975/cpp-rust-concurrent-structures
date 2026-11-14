@@ -1,0 +1,16 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_binary(
+    name = "lockfree_service",
+    srcs = [
+        "app.cpp",
+        "lockfree_queue.cpp",
+        "lockfree_queue.h"
+    ],
+    deps = [
+        "//cpp/services/common",
+        "@boost.lockfree//:boost.lockfree"
+    ]
+)

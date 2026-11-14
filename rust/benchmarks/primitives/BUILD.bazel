@@ -1,0 +1,28 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+_BENCH = "//rust/benchmarks/common:bench"
+
+_BENCHMARKS = [
+    "mutex",
+    "rwlock",
+    "once",
+    "condvar",
+    "barrier",
+    "thread",
+    "atomic_ptr",
+    "atomic_flag",
+    "coroutine"
+]
+
+[
+    rust_binary(
+        name = "bench_" + name,
+        srcs = ["bench_" + name + ".rs"],
+        crate_root = "bench_" + name + ".rs",
+        edition = "2021",
+        deps = [_BENCH]
+    )
+    for name in _BENCHMARKS
+]

@@ -1,0 +1,26 @@
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_binary(
+    name = "bombardier",
+    srcs = [
+        "app.cpp",
+        "config/config.cpp",
+        "config/config.h",
+        "generator/trade_generator.cpp",
+        "generator/trade_generator.h",
+        "network/sender.cpp",
+        "network/sender.h",
+        "statistics/progress_reporter.cpp",
+        "statistics/progress_reporter.h",
+    ],
+    includes = ["."],
+    deps = [
+        "//cpp/services/common",
+        "@boost.asio//:boost.asio",
+        "@cli11//:cli11",
+        "@fmt//:fmt",
+        "@ftxui//:component",
+    ]
+)
