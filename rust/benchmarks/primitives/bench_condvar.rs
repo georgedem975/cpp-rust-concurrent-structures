@@ -4,6 +4,7 @@ use std::sync::{Barrier, Condvar, Mutex};
 use bench::{emit, now_ns, parse_options, Row};
 
 const QUEUE_CAPACITY: usize = 64;
+const NANOS_PER_SECOND: f64 = 1_000_000_000.0;
 
 struct QueueState {
     items: VecDeque<i32>,
@@ -80,7 +81,7 @@ fn run_handoff(duration_seconds: f64, threads: usize) -> (f64, Vec<WorkerResult>
     let queue = BoundedQueue::new();
     let start_gate = Barrier::new(threads + 1);
     let started_at = now_ns();
-    let deadline = started_at + duration_seconds * 1e9;
+    let deadline = started_at + duration_seconds * NANOS_PER_SECOND;
 
     let (wall_ns, results) = std::thread::scope(|scope| {
         let workers: Vec<_> = (0..threads)

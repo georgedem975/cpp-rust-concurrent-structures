@@ -14,6 +14,9 @@ namespace {
     constexpr int kNameWidth = 22;
     constexpr int kNumberWidth = 12;
     constexpr int kShareWidth = 8;
+    constexpr int kStatusWidth = 15;
+    constexpr int kSpinnerStyle = 13;
+    constexpr double kPercentFactor = 100.0;
 }
 
 using service::formatNumber;
@@ -126,7 +129,7 @@ ftxui::Element ProgressReporter::renderSender(const SenderProgress& sender, std:
     using namespace ftxui;
 
     const double share = 
-        totalSent_ > 0 ? 100.0 * static_cast<double>(sender.sent) / totalSent_ : 0.0;
+        totalSent_ > 0 ? kPercentFactor * static_cast<double>(sender.sent) / totalSent_ : 0.0;
 
     const auto rate = 
         sender.failed ? text("failed") | color(Color::Red) : text(formatNumber(sender.rate)) | color(Color::Green);
@@ -189,7 +192,7 @@ ftxui::Element ProgressReporter::renderStatus() const {
     } else if (duration_ > 0.0) {
         status = {
             text(fmt::format("{:.1f}/{:.1f}s", elapsed_, duration_))
-                | size(WIDTH, EQUAL, 15),
+                | size(WIDTH, EQUAL, kStatusWidth),
 
             gauge(static_cast<float>(
                 std::clamp(elapsed_ / duration_, 0.0, 1.0)
@@ -197,7 +200,7 @@ ftxui::Element ProgressReporter::renderStatus() const {
         };
     } else {
         status = {
-            spinner(13, frame_),
+            spinner(kSpinnerStyle, frame_),
             text(fmt::format(" {:.1f}s", elapsed_)),
             filler()
         };

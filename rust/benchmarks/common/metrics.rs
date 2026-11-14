@@ -20,6 +20,11 @@ pub struct Row {
 
 const NANOS_PER_SECOND: f64 = 1_000_000_000.0;
 
+const P50_FRACTION: f64 = 0.50;
+const P95_FRACTION: f64 = 0.95;
+const P99_FRACTION: f64 = 0.99;
+const P999_FRACTION: f64 = 0.999;
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Metric {
     Throughput,
@@ -56,10 +61,10 @@ impl Row {
             samples.iter().sum::<f64>() / samples.len() as f64
         };
 
-        self.lat_p50_ns = percentile(samples, 0.50);
-        self.lat_p95_ns = percentile(samples, 0.95);
-        self.lat_p99_ns = percentile(samples, 0.99);
-        self.lat_p999_ns = percentile(samples, 0.999);
+        self.lat_p50_ns = percentile(samples, P50_FRACTION);
+        self.lat_p95_ns = percentile(samples, P95_FRACTION);
+        self.lat_p99_ns = percentile(samples, P99_FRACTION);
+        self.lat_p999_ns = percentile(samples, P999_FRACTION);
         self.lat_max_ns = samples.last().copied().unwrap_or(0.0);
     }
 }

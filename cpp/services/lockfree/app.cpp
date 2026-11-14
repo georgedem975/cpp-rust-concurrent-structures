@@ -15,8 +15,11 @@ namespace {
     constexpr std::uint16_t kPort = 9002;
     constexpr auto kIdleWait = std::chrono::microseconds(50);
 
+    constexpr unsigned int kMinWorkerCount = 1;
+    constexpr unsigned int kWorkerDivisor = 2;
+
     std::size_t workerCount() {
-        return std::max(1u, std::thread::hardware_concurrency() / 2);
+        return std::max(kMinWorkerCount, std::thread::hardware_concurrency() / kWorkerDivisor);
     }
 
     void workerLoop(service::LockfreeQueue& queue, service::Statistics& statistics, const std::atomic<bool>& stop) {

@@ -1,5 +1,6 @@
 #include "reporter.h"
 
+#include "clock.h"
 #include "format.h"
 
 #include <ftxui/component/component.hpp>
@@ -14,6 +15,11 @@
 namespace {
     constexpr int kLabelWidth = 14;
     constexpr auto kTickInterval = std::chrono::milliseconds(100);
+
+    constexpr float kWarningFillRatio = 0.9f;
+    constexpr double kMaxFillRatio = 1.0;
+    constexpr int kQueueSizeWidth = 18;
+    constexpr int kSpinnerStyle = 13;
 }
 
 namespace service {
@@ -101,8 +107,8 @@ namespace service {
             name_,
             formatNumber(static_cast<double>(snapshot.processed)),
             formatNumber(rate),
-            snapshot.averageLatencyUs() / 1000.0,
-            static_cast<double>(snapshot.maxLatencyNs) / 1e6,
+            snapshot.averageLatencyUs() / kMicrosecondsPerMillisecond,
+            static_cast<double>(snapshot.maxLatencyNs) / kNanosecondsPerMillisecond,
             formatNumber(static_cast<double>(snapshot.volume))
         );
     }
@@ -115,8 +121,7 @@ namespace service {
         const double elapsed = std::chrono::duration<double>(Clock::now() - started_).count();
         const double rate = elapsed > 0.0 ? static_cast<double>(snapshot.processed) / elapsed : 0.0;
         const float fill = capacity_ > 0
-            ? static_cast<float>(std::min(static_cast<double>(queue) / static_cast<double>(capacity_), 1.0))
-            : 0.0f;
+            ? static_cast<float>(std::min(static_cast<double>(queue) / static_cast<double>(capacity_), kMaxFillRatio)) : 0.0f;
 
         ++frame_;
 
@@ -124,7 +129,7 @@ namespace service {
             return hbox({
                 text(std::move(label)) | dim | size(WIDTH, EQUAL, kLabelWidth),
                 std::move(value),
-                filler(),
+                filler()
             });
         };
 
@@ -133,35 +138,35 @@ namespace service {
                 text("port") | dim,
                 text(" "),
                 text(std::to_string(port_)) | bold | color(Color::Yellow),
-                filler(),
+                filler()
             }),
             separator(),
             line("processed", text(formatNumber(static_cast<double>(snapshot.processed)))),
             line("rate", text(fmt::format("{} trades/s", formatNumber(rate))) | color(Color::Green)),
-            line("avg latency", text(fmt::format("{:.2f} ms", snapshot.averageLatencyUs() / 1000.0))),
-            line("max latency", text(fmt::format("{:.2f} ms", static_cast<double>(snapshot.maxLatencyNs) / 1e6))),
+            line("avg latency", text(fmt::format("{:.2f} ms", snapshot.averageLatencyUs() / kMicrosecondsPerMillisecond))),
+            line("max latency", text(fmt::format("{:.2f} ms", static_cast<double>(snapshot.maxLatencyNs) / kNanosecondsPerMillisecond))),
             line("volume", text(formatNumber(static_cast<double>(snapshot.volume)))),
             hbox({
                 text("queue") | dim | size(WIDTH, EQUAL, kLabelWidth),
-                text(fmt::format("{} / {}", queue, capacity_)) | size(WIDTH, EQUAL, 18),
-                gauge(fill) | color(fill > 0.9f ? Color::Red : Color::Green) | flex,
+                text(fmt::format("{} / {}", queue, capacity_)) | size(WIDTH, EQUAL, kQueueSizeWidth),
+                gauge(fill) | color(fill > kWarningFillRatio ? Color::Red : Color::Green) | flex
             }),
-            separator(),
+            separator()
         };
 
         if (finished_.load(std::memory_order_relaxed)) {
             rows.push_back(hbox({
                 text("done") | bold | color(Color::Green),
                 text(fmt::format(" in {:.2f}s", elapsed)),
-                filler(),
+                filler()
             }));
         } else {
             rows.push_back(hbox({
-                spinner(13, frame_),
+                spinner(kSpinnerStyle, frame_),
                 text(fmt::format(" {:.1f}s", elapsed)),
                 filler(),
                 text("Ctrl+C") | bold | color(Color::Red),
-                text(" stop") | dim,
+                text(" stop") | dim
             }));
         }
 

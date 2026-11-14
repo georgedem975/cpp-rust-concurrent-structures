@@ -12,6 +12,8 @@ import pandas as pd
 from .config import LIBRARY_PAIRS, STABILITY_LIMIT
 from .models import Pair, Series
 
+CPU_PERCENT = 100.0
+
 REQUIRED_COLUMNS = {
     "language",
     "primitive",
@@ -123,7 +125,7 @@ def make_series(rows: pd.DataFrame) -> Series:
 
     data["cpu_util"] = np.where(
         data["cpu"] > 0,
-        data["cpu"] / (data["threads"] * 100.0),
+        data["cpu"] / (data["threads"] * CPU_PERCENT),
         np.nan,
     )
 

@@ -12,7 +12,7 @@ namespace bench {
     };
 
     struct PointConfig {
-        int threads = 1;
+        int threads = 2;
         int repeat = 0;
         int batch = 1;
     };

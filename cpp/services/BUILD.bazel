@@ -1,21 +1,4 @@
-load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
-
 package(default_visibility = ["//visibility:public"])
-
-cc_binary(
-    name = "blocking_service",
-    srcs = ["blocking_service.cpp"],
-    deps = ["@boost.asio//:boost.asio"]
-)
-
-cc_binary(
-    name = "lockfree_service",
-    srcs = ["lockfree_service.cpp"],
-    deps = [
-        "@boost.asio//:boost.asio",
-        "@boost.lockfree//:boost.lockfree"
-    ]
-)
 
 alias(
     name = "bombardier",

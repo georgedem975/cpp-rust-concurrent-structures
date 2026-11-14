@@ -4,6 +4,8 @@ use bench::{emit, now_ns, parse_options, Row};
 
 const CALIBRATION_ROUNDS: usize = 32;
 const MAX_ROUNDS: usize = 10_000_000;
+const MIN_ROUNDS: usize = 1;
+const NANOS_PER_SECOND: f64 = 1_000_000_000.0;
 
 fn run_rounds(batch_size: u64, threads: usize, repeat: usize, rounds: usize) -> Row {
     let phase_barrier = Barrier::new(threads);
@@ -62,12 +64,12 @@ fn run_rounds(batch_size: u64, threads: usize, repeat: usize, rounds: usize) -> 
 fn calibrate_rounds(batch_size: u64, threads: usize, target_seconds: f64) -> usize {
     let probe = run_rounds(batch_size, threads, usize::MAX, CALIBRATION_ROUNDS);
     if probe.wall_ns <= 0.0 {
-        return 1;
+        return MIN_ROUNDS;
     }
 
     let average_round_ns = probe.wall_ns / CALIBRATION_ROUNDS as f64;
-    let estimated_rounds = (target_seconds * 1e9 / average_round_ns).ceil();
-    estimated_rounds.clamp(1.0, MAX_ROUNDS as f64) as usize
+    let estimated_rounds = (target_seconds * NANOS_PER_SECOND / average_round_ns).ceil();
+    estimated_rounds.clamp(MIN_ROUNDS as f64, MAX_ROUNDS as f64) as usize
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {

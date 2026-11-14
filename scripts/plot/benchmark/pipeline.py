@@ -18,6 +18,10 @@ from .plotting.summary import (
 )
 from .report import build_summary, report_quality, write_summary
 
+SPEEDUP_BASELINE = 1.0
+MIN_SPEEDUP_FLOOR = 0.05
+MIN_SPEEDUP_VMAX = 1.01
+
 
 def run(args) -> int:
     """Run the full processing pipeline for one or more suites."""
@@ -89,11 +93,11 @@ def run(args) -> int:
 
         matrix_rows, speedup = build_matrix(pairs, "speedup", threads)
         finite_speedup = speedup[np.isfinite(speedup)]
-        lowest_speedup = float(finite_speedup.min()) if finite_speedup.size else 0.05
+        lowest_speedup = float(finite_speedup.min()) if finite_speedup.size else MIN_SPEEDUP_FLOOR
         speedup_norm = matplotlib.colors.TwoSlopeNorm(
-            vcenter=1.0,
-            vmin=min(0.05, lowest_speedup),
-            vmax=max(float(max(threads)), 1.01),
+            vcenter=SPEEDUP_BASELINE,
+            vmin=min(MIN_SPEEDUP_FLOOR, lowest_speedup),
+            vmax=max(float(max(threads)), MIN_SPEEDUP_VMAX),
         )
         all_paths.extend(
             plot_heatmap(

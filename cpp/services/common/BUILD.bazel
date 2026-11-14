@@ -20,5 +20,5 @@ cc_library(
         "@boost.asio//:boost.asio",
         "@fmt//:fmt",
         "@ftxui//:component"
-    ],
+    ]
 )

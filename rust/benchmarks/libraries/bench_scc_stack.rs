@@ -7,6 +7,7 @@ use bench::{
 use scc::Stack;
 
 const INITIAL_ITEMS: usize = 1024;
+const STOP_CHECK_INTERVAL: u64 = 16;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let options = parse_options();
@@ -38,7 +39,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 match role {
                     WorkerRole::Producer => {
                         for operation in 0..batch_size {
-                            if operation % 16 == 0 && context.should_stop() {
+                            if operation % STOP_CHECK_INTERVAL == 0 && context.should_stop() {
                                 break;
                             }
 
@@ -48,7 +49,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     }
                     WorkerRole::Consumer => {
                         for operation in 0..batch_size {
-                            if operation % 16 == 0 && context.should_stop() {
+                            if operation % STOP_CHECK_INTERVAL == 0 && context.should_stop() {
                                 break;
                             }
 

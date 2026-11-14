@@ -2,6 +2,9 @@ use std::sync::{Arc, RwLock};
 
 use bench::{parse_options, run_grid, Options};
 
+const WRITE_PERIOD_90_10: u64 = 10;
+const WRITE_PERIOD_50_50: u64 = 2;
+
 fn run_mixed(
     options: &Options,
     lock: Arc<RwLock<()>>,
@@ -48,7 +51,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         })
     })?;
 
-    run_mixed(&options, Arc::clone(&lock), "mix_90_10", 10)?;
-    run_mixed(&options, lock, "mix_50_50", 2)?;
+    run_mixed(&options, Arc::clone(&lock), "mix_90_10", WRITE_PERIOD_90_10)?;
+    run_mixed(&options, lock, "mix_50_50", WRITE_PERIOD_50_50)?;
     Ok(())
 }

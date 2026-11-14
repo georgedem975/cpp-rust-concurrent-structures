@@ -8,6 +8,11 @@ from datetime import datetime
 from pathlib import Path
 
 
+BYTES_PER_GIBIBYTE = 1024 ** 3
+MEMORY_PRECISION_DECIMALS = 2
+BAZEL_VERSION_TIMEOUT_SECONDS = 10
+
+
 def get_total_memory_gb() -> float | None:
     if os.name != "nt":
         return None
@@ -35,7 +40,7 @@ def get_total_memory_gb() -> float | None:
         get_memory_status.restype = ctypes.c_int
 
         if get_memory_status(ctypes.byref(status)):
-            return round(status.ullTotalPhys / (1024 ** 3), 2)
+            return round(status.ullTotalPhys / BYTES_PER_GIBIBYTE, MEMORY_PRECISION_DECIMALS)
 
     except (AttributeError, OSError):
         pass
@@ -45,7 +50,7 @@ def get_total_memory_gb() -> float | None:
 
 def get_bazel_version(bazel: str) -> str | None:
     try:
-        result = subprocess.run([bazel, "--version"], capture_output=True, text=True, timeout=10, check=False)
+        result = subprocess.run([bazel, "--version"], capture_output=True, text=True, timeout=BAZEL_VERSION_TIMEOUT_SECONDS, check=False)
 
         if result.returncode == 0:
             return result.stdout.strip()

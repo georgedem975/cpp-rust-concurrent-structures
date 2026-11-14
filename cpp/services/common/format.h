@@ -6,13 +6,16 @@
 #include <string>
 
 namespace service {
+    inline constexpr double kMillion = 1e6;
+    inline constexpr double kThousand = 1e3;
+
     inline std::string formatNumber(double value) {
-        if (value >= 1e6) {
-            return fmt::format("{:.2f}M", value / 1e6);
+        if (value >= kMillion) {
+            return fmt::format("{:.2f}M", value / kMillion);
         }
 
-        if (value >= 1e3) {
-            return fmt::format("{:.1f}k", value / 1e3);
+        if (value >= kThousand) {
+            return fmt::format("{:.1f}k", value / kThousand);
         }
 
         return fmt::format("{:.0f}", value);

@@ -18,10 +18,15 @@ namespace {
     constexpr std::uint32_t kSetSeed              = 0x85ebca6bu;
     constexpr std::uint32_t kThreadSeedMultiplier = 0x9e3779b9u;
 
+    constexpr std::uint32_t kXorshiftShiftA = 13;
+    constexpr std::uint32_t kXorshiftShiftB = 17;
+    constexpr std::uint32_t kXorshiftShiftC = 5;
+    constexpr std::uint32_t kNonZeroSeedFallback = 1u;
+
     inline std::uint32_t Next(std::uint32_t& state) {
-        state ^= state << 13;
-        state ^= state >> 17;
-        state ^= state << 5;
+        state ^= state << kXorshiftShiftA;
+        state ^= state >> kXorshiftShiftB;
+        state ^= state << kXorshiftShiftC;
 
         return state;
     }
@@ -34,7 +39,7 @@ namespace {
         std::uint32_t seed =
             baseSeed ^ (static_cast<std::uint32_t>(threadId + 1) * kThreadSeedMultiplier);
 
-        return seed != 0 ? seed : 1u;
+        return seed != 0 ? seed : kNonZeroSeedFallback;
     }
 
     template <typename Map>

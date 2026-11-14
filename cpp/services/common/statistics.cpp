@@ -10,7 +10,7 @@ namespace service {
             return 0.0;
         }
 
-        return static_cast<double>(latencySumNs) / static_cast<double>(processed) / 1000.0;
+        return static_cast<double>(latencySumNs) / static_cast<double>(processed) / kNanosecondsPerMicrosecond;
     }
 
     void Statistics::add(const Trade& trade) {

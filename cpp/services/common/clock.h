@@ -5,6 +5,10 @@
 #include <cstdint>
 
 namespace service {
+    inline constexpr double kNanosecondsPerMicrosecond = 1000.0;
+    inline constexpr double kMicrosecondsPerMillisecond = 1000.0;
+    inline constexpr double kNanosecondsPerMillisecond = 1000000.0;
+
     inline std::int64_t nowNs() {
         using namespace std::chrono;
 

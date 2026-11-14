@@ -11,11 +11,16 @@ const THREAD_SEED_MULTIPLIER: u32 = 0x9e37_79b9;
 const MAP_SEED: u32 = 0x9e37_79b9;
 const SET_SEED: u32 = 0x85eb_ca6b;
 
+const XORSHIFT_SHIFT_A: u32 = 13;
+const XORSHIFT_SHIFT_B: u32 = 17;
+const XORSHIFT_SHIFT_C: u32 = 5;
+const NONZERO_SEED_FALLBACK: u32 = 1;
+
 #[inline]
 fn next_random(state: &mut u32) -> u32 {
-    *state ^= *state << 13;
-    *state ^= *state >> 17;
-    *state ^= *state << 5;
+    *state ^= *state << XORSHIFT_SHIFT_A;
+    *state ^= *state >> XORSHIFT_SHIFT_B;
+    *state ^= *state << XORSHIFT_SHIFT_C;
     *state
 }
 
@@ -26,7 +31,7 @@ fn next_key(state: &mut u32) -> u32 {
 
 fn seed_for_thread(seed: u32, thread_id: usize) -> u32 {
     let seed = seed ^ (thread_id as u32 + 1).wrapping_mul(THREAD_SEED_MULTIPLIER);
-    seed.max(1)
+    seed.max(NONZERO_SEED_FALLBACK)
 }
 
 fn run_map_batch(map: &SkipMap<u32, u32>, batch_size: u64, random_state: &mut u32) {

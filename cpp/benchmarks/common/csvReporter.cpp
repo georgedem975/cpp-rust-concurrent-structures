@@ -53,9 +53,7 @@ namespace bench {
             std::error_code error;
 
             if (!std::filesystem::is_directory(file.parent_path(), error)) {
-                throw std::runtime_error(
-                    "Output directory does not exist: " +
-                    file.parent_path().string());
+                throw std::runtime_error("Output directory does not exist: " + file.parent_path().string());
             }
         }
 

@@ -3,6 +3,14 @@ import time
 from pathlib import Path
 
 
+METRIC_COUNT = 2
+SCENARIO_COUNT = 4
+PER_RUN_OVERHEAD_SECONDS = 0.2
+TIMEOUT_SAFETY_FACTOR = 1.5
+MIN_TIMEOUT_SECONDS = 60.0
+TIMEOUT_BUFFER_SECONDS = 120.0
+
+
 def build_command(executable: Path, csv_path: Path, args) -> list[str]:
     return [
         str(executable),
@@ -24,17 +32,15 @@ def build_command(executable: Path, csv_path: Path, args) -> list[str]:
 
 
 def calculate_timeout(args) -> float:
-    metric_count = 2
-    scenario_count = 4
-    estimated_seconds = scenario_count * (
-        metric_count * args.warmup
+    estimated_seconds = SCENARIO_COUNT * (
+        METRIC_COUNT * args.warmup
         + args.repeats
         * len(args.threads)
-        * metric_count
-        * (args.duration + 0.2)
+        * METRIC_COUNT
+        * (args.duration + PER_RUN_OVERHEAD_SECONDS)
     )
 
-    return max(60.0, estimated_seconds * 1.5 + 120.0)
+    return max(MIN_TIMEOUT_SECONDS, estimated_seconds * TIMEOUT_SAFETY_FACTOR + TIMEOUT_BUFFER_SECONDS)
 
 
 def run_benchmark(command: list[str], timeout_seconds: float, project_root: Path) -> dict:

@@ -5,5 +5,5 @@ package(default_visibility = ["//visibility:public"])
 cc_binary(
     name = "blocking_service",
     srcs = ["app.cpp", "blocking_queue.cpp", "blocking_queue.h"],
-    deps = ["//cpp/services/common"],
+    deps = ["//cpp/services/common"]
 )

@@ -13,7 +13,7 @@ cc_binary(
         "network/sender.cpp",
         "network/sender.h",
         "statistics/progress_reporter.cpp",
-        "statistics/progress_reporter.h",
+        "statistics/progress_reporter.h"
     ],
     includes = ["."],
     deps = [
@@ -21,6 +21,6 @@ cc_binary(
         "@boost.asio//:boost.asio",
         "@cli11//:cli11",
         "@fmt//:fmt",
-        "@ftxui//:component",
+        "@ftxui//:component"
     ]
 )

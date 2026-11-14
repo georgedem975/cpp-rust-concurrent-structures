@@ -18,7 +18,7 @@ namespace bench {
     namespace {
         enum class SampleMode {
             None,
-            Batches,
+            Batches
         };
 
         struct RunSettings {
@@ -80,29 +80,20 @@ namespace bench {
             try {
                 while (true) {
                     long long reportedOperations = -1;
-                    const WorkerContext context {
-                        id,
-                        settings.threadCount,
-                        &control,
-                        &reportedOperations
-                    };
+                    const WorkerContext context { id, settings.threadCount, &control, &reportedOperations };
                     const auto batchStart = collectSamples ? now() : BenchmarkClock::time_point{};
 
                     worker(context);
                     result.finishTime = now();
 
-                    const long long completedOperations = reportedOperations < 0
-                        ? settings.batchSize
-                        : reportedOperations;
+                    const long long completedOperations = 
+                        reportedOperations < 0 ? settings.batchSize : reportedOperations;
 
                     result.operations += completedOperations;
 
                     if (collectSamples && completedOperations > 0) {
-                        const double batchDurationNs =
-                            toNanoseconds(result.finishTime - batchStart);
-                        result.batchDurationsNs.push_back(
-                            batchDurationNs * settings.batchSize / completedOperations
-                        );
+                        const double batchDurationNs = toNanoseconds(result.finishTime - batchStart);
+                        result.batchDurationsNs.push_back(batchDurationNs * settings.batchSize / completedOperations);
                     }
 
                     if (control.shouldStop()) {
@@ -131,21 +122,13 @@ namespace bench {
             threadsPool.reserve(workerCount);
 
             for (ThreadId id = 0; id < settings.threadCount; ++id) {
-                workers.push_back(
-                    makeWorker(WorkerContext { .id = id, .totalThreads = settings.threadCount })
-                );
+                workers.push_back(makeWorker(WorkerContext { .id = id, .totalThreads = settings.threadCount }));
             }
 
             for (ThreadId id = 0; id < settings.threadCount; ++id) {
                 threadsPool.emplace_back([&, id] {
                     results[static_cast<std::size_t>(id)] =
-                        runWorker(
-                            id,
-                            settings,
-                            barrier,
-                            control,
-                            workers[static_cast<std::size_t>(id)]
-                        );
+                        runWorker(id, settings, barrier, control, workers[static_cast<std::size_t>(id)]);
                 });
             }
 

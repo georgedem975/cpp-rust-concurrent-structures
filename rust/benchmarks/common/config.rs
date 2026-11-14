@@ -2,6 +2,12 @@ use std::collections::HashSet;
 use std::path::PathBuf;
 use std::process;
 
+const DEFAULT_THREADS: [usize; 5] = [2, 4, 8, 16, 32];
+const DEFAULT_DURATION: f64 = 1.0;
+const DEFAULT_REPEATS: usize = 10;
+const DEFAULT_BATCH: u64 = 100;
+const DEFAULT_WARMUP: f64 = 1.0;
+
 #[derive(Clone, Debug)]
 pub struct Options {
     pub threads: Vec<usize>,
@@ -17,11 +23,11 @@ pub struct Options {
 impl Default for Options {
     fn default() -> Self {
         Self {
-            threads: vec![2, 4, 8, 16, 32],
-            duration: 1.0,
-            repeats: 10,
-            batch: 100,
-            warmup: 1.0,
+            threads: DEFAULT_THREADS.to_vec(),
+            duration: DEFAULT_DURATION,
+            repeats: DEFAULT_REPEATS,
+            batch: DEFAULT_BATCH,
+            warmup: DEFAULT_WARMUP,
             out: None,
             throughput: false,
             latency: false,
